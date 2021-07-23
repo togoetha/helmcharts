@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{  .Values.mysql.name  }}
+spec:
+  selector:
+    matchLabels:
+      app:  {{  .Values.mysql.name  }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app:  {{  .Values.mysql.name  }}
+    spec:
+      containers:
+      - image: {{  .Values.mysql.container  }}
+        name: {{  .Values.mysql.name  }}
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value:  {{  .Values.mysql.password  }}
+        ports:
+        - containerPort:  {{  .Values.mysql.port  }}
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      serviceAccountName: {{  .Values.serviceAccount.name  }}
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
