@@ -15,23 +15,30 @@ spec:
     spec:
       containers:
       - image: {{  .Values.mysql.container  }}
-        name: {{  .Values.mysql.name  }}
+        name: {{  .Values.mysql.name  }} 
         env:
-          # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
-          value:  {{  .Values.mysql.password  }}
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mysql.database }}
+        - name: MYSQL_ROOT_HOST
+          value: '%'
         ports:
         - containerPort:  {{  .Values.mysql.port  }}
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
+        - name: mysql-config
+          mountPath: /etc/mysql/conf.d/
       serviceAccountName: {{  .Values.serviceAccount.name  }}
-      securityContext:
-        runAsUser: 999
-        runAsGroup: 999
-        fsGroup: 999
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+      - name: mysql-config
+        configMap: 
+          name: mysql-config

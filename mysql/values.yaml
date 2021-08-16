@@ -1,7 +1,7 @@
 mysql:
-  container: mysql:5.7
+  container: mysql:8.0.26
+  database: mydb
   name: mysql
-  password: secret
   port: 3306
 
 serviceAccount:

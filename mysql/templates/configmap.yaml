@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  docker.cnf: |
+    [mysqld]
+    bind-address           = 0.0.0.0
+    skip-host-cache
+    skip-name-resolve
