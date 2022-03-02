@@ -1,6 +1,6 @@
 mysql:
   container: mysql:8.0.26
-  database: mydb
+  database: todosvc
   name: mysql
   port: 3306
 
